@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This file represents config of the PIES Proxy Application.
+Properties MUST be considered mandatory unless otherwise is specified.
+-->
+<config
+	xmlns="urn:com:gl:vn:me:ko:pies:app:proxy:application"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:com:gl:vn:me:ko:pies:app:proxy:application proxyConfig.xsd">
+	<proxyServer>
+		<frontEnd>
+			<socket>
+				<!--
+				Internet address of a network interface the server uses to listen for incoming requests.
+				Optional property. If the property isn't specified the value is determined automatically.
+				-->
+				<host>localhost</host>
+				<!--
+				TCP port the server uses to listen for incoming requests.
+				-->
+				<port>7001</port>
+			</socket>
+		</frontEnd>
+		<backEnd>
+			<socket>
+				<!--
+				Internet address of a network interface the server uses to forward incoming requests.
+				-->
+				<host>localhost</host>
+				<!--
+				TCP port the server uses to forward incoming requests.
+				-->
+				<port>7000</port>
+			</socket>
+		</backEnd>
+		<threads>
+			<!--
+			Maximum number of threads that accept new TCP connections.
+			-->
+			<acceptors>2</acceptors>
+			<!--
+			Maximum number of threads that process data received via the accepted TCP connections.
+			-->
+			<workers>3</workers>
+		</threads>
+		<timeouts>
+			<!--
+			Amount of time in milliseconds to wait for completion of I/O operations.
+			E.g. wait for connect to back-end.
+			MUST be positive.
+			-->
+			<ioTimeoutMillis>1000</ioTimeoutMillis>
+		</timeouts>
+	</proxyServer>
+	<controlServer>
+		<socket>
+			<!--
+			Internet address of a network interface the server uses to listen for control requests (REST).
+			Optional property. If the property isn't specified the value is determined automatically.
+			-->
+			<host>localhost</host>
+			<!--
+			TCP port the server listens for control requests.
+			-->
+			<port>5203</port>
+		</socket>
+		<threads>
+			<!--
+			Maximum number of threads that accept new TCP connections.
+			-->
+			<acceptors>2</acceptors>
+			<!--
+			Maximum number of threads that process data received via the accepted TCP connections.
+			-->
+			<workers>3</workers>
+			<!--
+			Maximum number of threads that perform post-response actions
+			(actions that are performed after sending an HTTP response).
+			-->
+			<postResponseWorkers>1</postResponseWorkers>
+		</threads>
+	</controlServer>
+</config>

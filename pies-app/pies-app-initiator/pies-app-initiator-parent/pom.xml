@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<description></description>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>pies-app-initiator-parent</artifactId>
+	<packaging>pom</packaging>
+	<name>pies-app-initiator-parent</name>
+	<url>${pies.project.url}</url>
+	<licenses>
+		<license>
+			<name>${pies.project.license.name}</name>
+			<url>${pies.project.license.url}</url>
+		</license>
+	</licenses>
+	<inceptionYear>${pies.project.inceptionYear}</inceptionYear>
+	<organization>
+		<name>${pies.project.organization.name}</name>
+		<url>${pies.project.organization.url}</url>
+	</organization>
+	<parent>
+		<groupId>com.gl.vn.me.ko.pies</groupId>
+		<artifactId>pies-app-parent</artifactId>
+		<version>0.0.0-SNAPSHOT</version>
+		<relativePath>../../pies-app-parent/pom.xml</relativePath>
+	</parent>
+</project>

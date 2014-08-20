@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config
+	xmlns="urn:com:gl:vn:me:ko:pies:base:main"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:com:gl:vn:me:ko:pies:base:main testDefaultConfigLocator.xsd">
+	<pies>
+		<base>
+			<main>
+				<test>test</test>
+			</main>
+		</base>
+	</pies>
+</config>

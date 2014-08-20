@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This file represents Application Config.
+Properties MUST be considered mandatory unless otherwise is specified.
+
+${sys:pies.appHome} MAY be used to refer to Application Home.
+-->
+<config
+	xmlns="urn:com:gl:vn:me:ko:pies:base:main"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:com:gl:vn:me:ko:pies:base:main applicationConfig.xsd">
+	<!--
+	A stage the Application is running in.
+	Allowed values:
+		development - At this stage minimization of a startup time is more important than runtime performance.
+		production - At this stage maximization of performance and minimization of delays is more important than a startup time.
+	-->
+	<stage>development</stage>
+</config>

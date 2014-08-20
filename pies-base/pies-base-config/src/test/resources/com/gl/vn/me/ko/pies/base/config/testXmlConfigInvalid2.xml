@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<someRootElement
+	xmlns="urn:com:gl:vn:me:ko:pies"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:com:gl:vn:me:ko:pies testXmlConfig.xsd">
+	<foo>
+		<bar>
+			<testString>value</testString>
+			<testMultipleOfStrings>value1; value2;
+				value1;
+				value3;
+				valueWithEscaped\;Semicolon
+			</testMultipleOfStrings>
+			<testInteger>-1</testInteger>
+			<testLong>9000000000</testLong>
+			<testDouble>_1.6E10</testDouble><!-- invalid content -->
+			<testBoolean>true</testBoolean>
+			<testBigInteger>999999999999999999</testBigInteger>
+			<testBigDecimal>-0.5E-9999</testBigDecimal>
+		</bar>
+	</foo>
+</someRootElement>

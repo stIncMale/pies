@@ -1,0 +1,313 @@
+package com.gl.vn.me.ko.pies.app.initiator;
+
+import static com.gl.vn.me.ko.pies.base.constant.Message.GUICE_POTENTIALLY_SWALLOWED;
+import static java.net.InetAddress.getByName;
+import com.gl.vn.me.ko.pies.base.config.PropsConfig;
+import com.gl.vn.me.ko.pies.base.config.app.ConfigLocator;
+import com.gl.vn.me.ko.pies.base.main.GuiceLocator;
+import com.gl.vn.me.ko.pies.base.throwable.ApplicationException;
+import com.gl.vn.me.ko.pies.platform.client.tcp.TcpChannelInitializer;
+import com.gl.vn.me.ko.pies.platform.client.tcp.TcpSequentialClient;
+import com.gl.vn.me.ko.pies.platform.client.tcp.TcpSequentialClientAddress;
+import com.gl.vn.me.ko.pies.platform.client.tcp.TcpSequentialClientConnectTimeout;
+import com.gl.vn.me.ko.pies.platform.client.tcp.TcpSequentialClientName;
+import com.gl.vn.me.ko.pies.platform.client.tcp.TcpSequentialClientThreadFactory;
+import com.gl.vn.me.ko.pies.platform.client.tcp.TcpSequentialClientWorker;
+import com.gl.vn.me.ko.pies.platform.server.rest.JsonRestRequestHandlerResult;
+import com.gl.vn.me.ko.pies.platform.server.rest.JsonRestServer;
+import com.gl.vn.me.ko.pies.platform.server.rest.RestRequestHandler;
+import com.gl.vn.me.ko.pies.platform.server.rest.RestServerAddress;
+import com.gl.vn.me.ko.pies.platform.server.rest.RestServerBoss;
+import com.gl.vn.me.ko.pies.platform.server.rest.RestServerName;
+import com.gl.vn.me.ko.pies.platform.server.rest.RestServerRequestHandling;
+import com.gl.vn.me.ko.pies.platform.server.rest.RestServerThreadFactory;
+import com.gl.vn.me.ko.pies.platform.server.rest.RestServerWorker;
+import com.google.common.collect.ImmutableList;
+import com.google.inject.AbstractModule;
+import com.google.inject.Provider;
+import com.google.inject.Provides;
+import com.google.inject.TypeLiteral;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.socket.ServerSocketChannel;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.concurrent.ThreadFactory;
+import javax.annotation.Nullable;
+import javax.inject.Singleton;
+import javax.json.Json;
+import javax.json.JsonBuilderFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * {@link AbstractModule} that SHOULD be used throughout PIES Initiator Application.
+ */
+final class InitiatorModule extends AbstractModule {
+	private static final Logger LOGGER = LoggerFactory.getLogger(InitiatorModule.class);
+	private static final InitiatorModule INSTANCE = new InitiatorModule();
+	private static final String[] DEPENDENCIES = new String[] {
+		"com.gl.vn.me.ko.pies.base.main",
+		"com.gl.vn.me.ko.pies.base.thread"};
+	/**
+	 * Name of the file that specifies Initiator Config.
+	 */
+	private static final String CONFIG_FILE_NAME = "initiatorConfig.xml";
+
+	final static InitiatorModule getInstance() {
+		return INSTANCE;
+	}
+
+	@SuppressFBWarnings(value = "UPM_UNCALLED_PRIVATE_METHOD",
+			justification = "The method is called from configure() method, FindBugs just don't understand lambdas")
+	private static final ChannelInitializer<ServerSocketChannel> createServerChannelInitializer() {
+		final ChannelInitializer<ServerSocketChannel> result;
+		try {
+			result = new ChannelInitializer<ServerSocketChannel>() {
+				@Override
+				protected final void initChannel(final ServerSocketChannel channel) throws Exception {
+					final ChannelPipeline pipeline = channel.pipeline();
+					final ChannelHandler channelHandler;
+					if (LoggerFactory.getLogger(InitiatorApplication.class).isDebugEnabled()) {
+						channelHandler = new LoggingHandler(LogLevel.DEBUG);
+					} else {
+						channelHandler = new LoggingHandler(LogLevel.INFO);
+					}
+					pipeline.addLast(channelHandler);
+				}
+			};
+		} catch (final RuntimeException e) {
+			LOGGER.error(GUICE_POTENTIALLY_SWALLOWED, e);
+			throw e;
+		}
+		return result;
+	}
+
+	private InitiatorModule() {
+	}
+
+	@SuppressFBWarnings(value = "SIC_INNER_SHOULD_BE_STATIC_ANON",
+			justification = "It's more readable to use anonimous class for binding instead of a static one")
+	@Override
+	protected final void configure() {
+		try {
+			for (final AbstractModule module : GuiceLocator.getModules(DEPENDENCIES)) {
+				install(module);
+			}
+			bind(JsonBuilderFactory.class).toInstance(Json.createBuilderFactory(null));
+			bind(String.class).annotatedWith(RestServerName.class).toInstance("Control Server");
+			bind(JsonRestServer.class).in(Singleton.class);
+			bind(new TypeLiteral<ChannelInitializer<ServerSocketChannel>>() {
+			})
+					.annotatedWith(RestServerBoss.class)
+					.toProvider(
+							(Provider<ChannelInitializer<ServerSocketChannel>>)InitiatorModule::createServerChannelInitializer)
+					.in(Singleton.class);
+			bind(new TypeLiteral<TcpSequentialClient<byte[], byte[]>>() {
+			}).
+					in(Singleton.class);
+			bind(String.class).annotatedWith(TcpSequentialClientName.class).toInstance("Initiator Client");
+			bind(TcpChannelInitializer.class).annotatedWith(TcpSequentialClientWorker.class)
+					.toInstance((channel) -> channel.pipeline().addFirst(new EchoCodec()));
+		} catch (final RuntimeException e) {
+			LOGGER.error(GUICE_POTENTIALLY_SWALLOWED, e);
+			throw e;
+		}
+	}
+
+	@Provides
+	@Singleton
+	@SuppressFBWarnings(value = "UPM_UNCALLED_PRIVATE_METHOD", justification = "This method is called by Guice framework")
+	private final PropsConfig provideConfig(final ConfigLocator configLocator) {
+		final PropsConfig result;
+		try {
+			result = configLocator.getXmlPropsConfig(CONFIG_FILE_NAME);
+			InitiatorConfigPropertyName.validate(result, CONFIG_FILE_NAME);
+		} catch (final RuntimeException e) {
+			LOGGER.error(GUICE_POTENTIALLY_SWALLOWED, e);
+			throw e;
+		}
+		return result;
+	}
+
+	@Provides
+	@Singleton
+	@RestServerAddress
+	@SuppressFBWarnings(value = "UPM_UNCALLED_PRIVATE_METHOD", justification = "This method is called by Guice framework")
+	private final InetSocketAddress provideControlSrvAddress(final PropsConfig cfg) {
+		final InetSocketAddress result;
+		try {
+			final int port = cfg.getInteger(InitiatorConfigPropertyName.CONTROL_PORT).intValue();
+			final Optional<String> optHostPropertyValue = cfg.getString(InitiatorConfigPropertyName.CONTROL_HOST, null);
+			final InetAddress host;
+			try {
+				host = optHostPropertyValue.isPresent()
+						? InetAddress.getByName(optHostPropertyValue.get()) : InetAddress.getLocalHost();
+			} catch (final UnknownHostException e) {
+				throw new ApplicationException(e);
+			}
+			result = new InetSocketAddress(host, port);
+		} catch (final RuntimeException e) {
+			LOGGER.error(GUICE_POTENTIALLY_SWALLOWED, e);
+			throw e;
+		}
+		return result;
+	}
+
+	@Provides
+	@Singleton
+	@RestServerBoss
+	@SuppressFBWarnings(value = "UPM_UNCALLED_PRIVATE_METHOD", justification = "This method is called by Guice framework")
+	private final Integer provideControlSrvMaxBossThreads(final PropsConfig cfg) {
+		final Integer result;
+		try {
+			result = cfg.getInteger(InitiatorConfigPropertyName.CONTROL_ACCEPTORS);
+		} catch (final RuntimeException e) {
+			LOGGER.error(GUICE_POTENTIALLY_SWALLOWED, e);
+			throw e;
+		}
+		return result;
+	}
+
+	@Provides
+	@Singleton
+	@RestServerRequestHandling
+	@SuppressFBWarnings(value = "UPM_UNCALLED_PRIVATE_METHOD", justification = "This method is called by Guice framework")
+	private final Integer provideControlSrvMaxDispatcherThreads(final PropsConfig cfg) {
+		final Integer result;
+		try {
+			result = cfg.getInteger(InitiatorConfigPropertyName.CONTROL_POST_RESPONSE_WORKERS);
+		} catch (final RuntimeException e) {
+			LOGGER.error(GUICE_POTENTIALLY_SWALLOWED, e);
+			throw e;
+		}
+		return result;
+	}
+
+	@Provides
+	@Singleton
+	@RestServerWorker
+	@SuppressFBWarnings(value = "UPM_UNCALLED_PRIVATE_METHOD", justification = "This method is called by Guice framework")
+	private final Integer provideControlSrvMaxWorkerThreads(final PropsConfig cfg) {
+		final Integer result;
+		try {
+			result = cfg.getInteger(InitiatorConfigPropertyName.CONTROL_WORKERS);
+		} catch (final RuntimeException e) {
+			LOGGER.error(GUICE_POTENTIALLY_SWALLOWED, e);
+			throw e;
+		}
+		return result;
+	}
+
+	@Provides
+	@RestServerRequestHandling
+	@Nullable
+	@SuppressFBWarnings(value = "UPM_UNCALLED_PRIVATE_METHOD", justification = "This method is called by Guice framework")
+	private final Collection<? extends RestRequestHandler<? extends JsonRestRequestHandlerResult>>
+			provideControlSrvRestRequestHandlers(final PropsConfig cfg, final TcpSequentialClient<byte[], byte[]> echoClient,
+					final JsonBuilderFactory jsonBuilderFactory) {
+		final Collection<? extends RestRequestHandler<? extends JsonRestRequestHandlerResult>> result;
+		try {
+			final ImmutableList.Builder<RestRequestHandler<JsonRestRequestHandlerResult>> resultBuilder = ImmutableList.builder();
+			resultBuilder
+					.add(new InitiatorShutdownRestRequestHandler(echoClient, jsonBuilderFactory))
+					.add(new EchoUtf8StringRestRequestHandler(
+									echoClient,
+									cfg.getBoolean(InitiatorConfigPropertyName.INITIATOR_CLIENT_VALIDATE_RESPONSE).booleanValue(),
+									cfg.getLong(InitiatorConfigPropertyName.INITIATOR_CLIENT_IO_TIMEOUT_MILLIS).longValue(),
+									jsonBuilderFactory));
+			result = resultBuilder.build();
+		} catch (final RuntimeException e) {
+			LOGGER.error(GUICE_POTENTIALLY_SWALLOWED, e);
+			throw e;
+		}
+		return result;
+	}
+
+	@Provides
+	@RestServerThreadFactory
+	@SuppressFBWarnings(value = "UPM_UNCALLED_PRIVATE_METHOD", justification = "This method is called by Guice framework")
+	private final ThreadFactory provideControlSrvThreadFactory(final ThreadFactory threadFactory) {
+		final ThreadFactory result;
+		try {
+			result = threadFactory;
+		} catch (final RuntimeException e) {
+			LOGGER.error(GUICE_POTENTIALLY_SWALLOWED, e);
+			throw e;
+		}
+		return result;
+	}
+
+	@Provides
+	@TcpSequentialClientAddress
+	@Singleton
+	@SuppressFBWarnings(value = "UPM_UNCALLED_PRIVATE_METHOD", justification = "This method is called by Guice framework")
+	private final InetSocketAddress providEchoClientAddress(final PropsConfig cfg) {
+		final InetSocketAddress result;
+		try {
+			final InetAddress host;
+			try {
+				host = getByName(cfg.getString(InitiatorConfigPropertyName.INITIATOR_CLIENT_HOST));
+			} catch (final UnknownHostException e) {
+				throw new ApplicationException(e);
+			}
+			final int port = cfg.getInteger(InitiatorConfigPropertyName.INITIATOR_CLIENT_PORT).intValue();
+			result = new InetSocketAddress(host, port);
+		} catch (final RuntimeException e) {
+			LOGGER.error(GUICE_POTENTIALLY_SWALLOWED, e);
+			throw e;
+		}
+		return result;
+	}
+
+	@Provides
+	@TcpSequentialClientWorker
+	@Singleton
+	@SuppressFBWarnings(value = "UPM_UNCALLED_PRIVATE_METHOD", justification = "This method is called by Guice framework")
+	private final Integer providEchoClientMaxWorkerThreads(final PropsConfig cfg) {
+		final Integer result;
+		try {
+			result = cfg.getInteger(InitiatorConfigPropertyName.INITIATOR_CLIENT_WORKERS);
+		} catch (final RuntimeException e) {
+			LOGGER.error(GUICE_POTENTIALLY_SWALLOWED, e);
+			throw e;
+		}
+		return result;
+	}
+
+	@Provides
+	@TcpSequentialClientThreadFactory
+	@SuppressFBWarnings(value = "UPM_UNCALLED_PRIVATE_METHOD", justification = "This method is called by Guice framework")
+	private final ThreadFactory providEchoClientThreadFactory(final ThreadFactory threadFactory) {
+		final ThreadFactory result;
+		try {
+			result = threadFactory;
+		} catch (final RuntimeException e) {
+			LOGGER.error(GUICE_POTENTIALLY_SWALLOWED, e);
+			throw e;
+		}
+		return result;
+	}
+
+	@Provides
+	@TcpSequentialClientConnectTimeout
+	@Singleton
+	@SuppressFBWarnings(value = "UPM_UNCALLED_PRIVATE_METHOD", justification = "This method is called by Guice framework")
+	private final Integer providEchoClientConnectTimeoutMillis(final PropsConfig cfg) {
+		final Integer result;
+		try {
+			result = cfg.getInteger(InitiatorConfigPropertyName.INITIATOR_CLIENT_IO_TIMEOUT_MILLIS);
+		} catch (final RuntimeException e) {
+			LOGGER.error(GUICE_POTENTIALLY_SWALLOWED, e);
+			throw e;
+		}
+		return result;
+	}
+}

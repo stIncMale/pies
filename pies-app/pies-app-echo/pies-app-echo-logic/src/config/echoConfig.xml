@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This file represents config of the PIES Echo Application.
+Properties MUST be considered mandatory unless otherwise is specified.
+-->
+<config
+	xmlns="urn:com:gl:vn:me:ko:pies:app:echo:application"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:com:gl:vn:me:ko:pies:app:echo:application echoConfig.xsd">
+	<echoServer>
+		<socket>
+			<!--
+			Internet address of a network interface the server uses to listen for echo requests.
+			Optional property. If the property isn't specified the value is determined automatically.
+			-->
+			<host>localhost</host>
+			<!--
+			TCP port the server listens for echo requests.
+			-->
+			<port>7000</port>
+		</socket>
+		<threads>
+			<!--
+			Maximum number of threads that accept new TCP connections.
+			-->
+			<acceptors>2</acceptors>
+			<!--
+			Maximum number of threads that process data received via the accepted TCP connections.
+			-->
+			<workers>3</workers>
+		</threads>
+	</echoServer>
+	<controlServer>
+		<socket>
+			<!--
+			Internet address of a network interface the server uses to listen for control requests (REST).
+			Optional property. If the property isn't specified the value is determined automatically.
+			-->
+			<host>localhost</host>
+			<!--
+			TCP port the server listens for control requests.
+			-->
+			<port>5202</port>
+		</socket>
+		<threads>
+			<!--
+			Maximum number of threads that accept new TCP connections.
+			-->
+			<acceptors>2</acceptors>
+			<!--
+			Maximum number of threads that process data received via the accepted TCP connections.
+			-->
+			<workers>3</workers>
+			<!--
+			Maximum number of threads that perform post-response actions
+			(actions that are performed after sending an HTTP response).
+			-->
+			<postResponseWorkers>1</postResponseWorkers>
+		</threads>
+	</controlServer>
+</config>
