@@ -42,7 +42,7 @@ readonly OPERATING_SYSTEM_TYPE=`getOperatingSystemType`
 readonly FILE_PATH_SEPARATOR=`getFilePathSeparator`
 
 #A path to Java executable file.
-readonly JAVA_EXECUTABLE="/usr/bin/java"
+readonly JAVA_EXECUTABLE="java"
 
 #Java options. Note that PIES Application-specific -D Java options are configured in separate variables.
 JAVA_OPTIONS="${JAVA_OPTIONS} -server"

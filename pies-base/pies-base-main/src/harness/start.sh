@@ -65,13 +65,6 @@ then
 	exitError
 fi
 
-#Check if file JAVA_EXECUTABLE exists.
-if ! [ -e "${JAVA_EXECUTABLE}" ]
-then
-	echoError "Application can't be started because file ${JAVA_EXECUTABLE} doesn't exist"
-	exitError
-fi
-
 #Deal with JAVA_CONSOLE_LOG_FILE.
 log "Log files:"
 if [ -e "${JAVA_CONSOLE_LOG_FILE}" ]
