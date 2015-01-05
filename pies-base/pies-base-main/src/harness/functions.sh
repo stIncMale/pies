@@ -172,5 +172,12 @@ escapeSpacesInPath() {
 #
 #${1} - Name of the file.
 getLastModifyTime() {
-	echo `stat -f "%m" "${1}"`
+	if stat -f %m "${1}" >/dev/null 2>&1
+	then
+		#BDS syntax
+		echo `stat -f %m "${1}"`
+	else
+		#GNU/Linux syntax
+		echo `stat -c %Y "${1}"`
+	fi
 }
