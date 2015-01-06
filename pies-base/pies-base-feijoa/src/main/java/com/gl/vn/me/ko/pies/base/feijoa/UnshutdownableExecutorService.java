@@ -42,7 +42,8 @@ final class UnshutdownableExecutorService implements ExecutorService {
 	}
 
 	@Override
-	public final <T> List<Future<T>> invokeAll(final Collection<? extends Callable<T>> tasks, final long timeout, final TimeUnit unit) throws InterruptedException {
+	public final <T> List<Future<T>> invokeAll(
+			final Collection<? extends Callable<T>> tasks, final long timeout, final TimeUnit unit) throws InterruptedException {
 		return executorService.invokeAll(tasks, timeout, unit);
 	}
 
@@ -52,7 +53,8 @@ final class UnshutdownableExecutorService implements ExecutorService {
 	}
 
 	@Override
-	public final <T> T invokeAny(final Collection<? extends Callable<T>> tasks, final long timeout, final TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+	public final <T> T invokeAny(final Collection<? extends Callable<T>> tasks, final long timeout, final TimeUnit unit)
+			throws InterruptedException, ExecutionException, TimeoutException {
 		return executorService.invokeAny(tasks, timeout, unit);
 	}
 

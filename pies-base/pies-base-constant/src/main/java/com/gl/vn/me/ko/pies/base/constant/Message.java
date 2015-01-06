@@ -110,7 +110,7 @@ public final class Message {
 	 * Value of this constant is {@value}.
 	 */
 	public static final String CAN_NEVER_HAPPEN
-			= "Suprise Motherfucker! You see a error that could never happen. There are two possibilities:"
+			= "Surprise Motherfucker! You see a error that could never happen. There are two possibilities:"
 			+ " the End of the World is coming, or something is very wrong with the Application";
 	/**
 	 * Specifies message for situation when one had to swallow a {@link Throwable}.
