@@ -34,6 +34,7 @@ import java.util.concurrent.ThreadFactory;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import javax.inject.Singleton;
+import org.apache.commons.lang.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -233,7 +234,13 @@ public final class Main {
 	private static final void configureLoggingSystem() {
 		final Path logConfigPath = FileSystems.getDefault()
 				.getPath(JavaOption.getValue(JavaOptionName.CONFIGS_LOCATION), LOG4J_CONFIG_FILE_NAME);
-		System.setProperty(SYS_PROPERTY_LOG4J2_CONFIG, logConfigPath.toString());
+		final String sysPropertyLog4jConfigValue;
+		if (SystemUtils.IS_OS_WINDOWS) {
+			sysPropertyLog4jConfigValue = "file://" + logConfigPath.toString();
+		} else {
+			sysPropertyLog4jConfigValue = logConfigPath.toString();
+		}
+		System.setProperty(SYS_PROPERTY_LOG4J2_CONFIG, sysPropertyLog4jConfigValue);
 		Std.outPrintln(Message.format("Logging system was initialized to use config %s", logConfigPath));
 	}
 

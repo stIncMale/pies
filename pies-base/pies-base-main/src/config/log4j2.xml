@@ -5,7 +5,7 @@ Note that while Log4j supports runtime configuration changes, not all changes MA
 (e.g. some Echo and Control Servers logging made via Netty logging handlers)
 
 ${sys:pies.appHome} can be used to refer to Application Home.
-${sys:pies.configsLocation} can be used to refer to Logs Location.
+${sys:pies.logsLocation} can be used to refer to Logs Location.
 -->
 <Configuration name="Logging Config" status="warn" monitorInterval="10" strict="true">
 	<Properties>
@@ -18,7 +18,7 @@ ${sys:pies.configsLocation} can be used to refer to Logs Location.
 	</Properties>
 	<Appenders>
 		<Appender type="RollingFile" name="applicationLog" fileName="${pies.applicationLogFile}" immediateFlush="true"
-				  filePattern="${sys:pies.logsLocation}/${pies.applicationLogFileName}_#%i">
+				  filePattern="${pies.applicationLogFileName}_%i">
 			<Layout type="PatternLayout" charset="${pies.charset}">
 				<Pattern>${pies.layoutPattern}</Pattern>
 			</Layout>
