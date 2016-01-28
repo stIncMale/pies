@@ -1,4 +1,4 @@
-#PIES#
+![PIES](https://7fc64c31-a-62cb3a1a-s-sites.googlegroups.com/site/projectpies/config/customLogo.gif)
 <br/>
 [Documentation](https://sites.google.com/site/projectpies/)<br/>
 [Contacts](https://sites.google.com/site/aboutmale/board)<br/>
