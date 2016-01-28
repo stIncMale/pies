@@ -45,4 +45,8 @@ public final class ThrowableUtil {
 		} while (t != null);
 		return Optional.ofNullable(result);
 	}
+
+	private ThrowableUtil() {
+		throw new UnsupportedOperationException(Message.INSTANTIATION_NOT_SUPPORTED);
+	}
 }

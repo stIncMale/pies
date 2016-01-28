@@ -13,8 +13,8 @@ readonly EXEC_LEVEL_START="2"
 readonly EXEC_LEVEL_SHUTDOWN="3"
 
 #Set environment
-readonly MANUAL_TEST_LOCATION="/Users/male/Documents/programming/projects/pies/default/misc/manual test"
-readonly PROJECT_LOCATION="/Users/male/Documents/programming/projects/pies/default"
+readonly MANUAL_TEST_LOCATION="/Users/male/Documents/programming/projects/pies/misc/manual test"
+readonly PROJECT_LOCATION="/Users/male/Documents/programming/projects/pies"
 readonly PROJECT_POM="${PROJECT_LOCATION}/pom.xml"
 readonly ASSEMBLY_LOCATION="${PROJECT_LOCATION}/target"
 readonly ASSEMBLY_NAME="pies-0.0.0-SNAPSHOT-pies.assembly.zip"

@@ -21,6 +21,7 @@ Properties MUST be considered mandatory unless otherwise is specified.
 		<threads>
 			<!--
 			Maximum number of threads that process data sent/received via TCP connections.
+			It's RECOMMENDED to use the same value as for the property controlServer.threads.workers.
 			-->
 			<workers>3</workers>
 		</threads>

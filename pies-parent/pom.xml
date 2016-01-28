@@ -129,7 +129,6 @@
 			<dependency>
 				<groupId>io.netty</groupId>
 				<artifactId>netty-all</artifactId>
-				<!-- TODO change version when Netty 5 will be released -->
 				<version>5.0.0.Alpha1</version>
 			</dependency>
 			<dependency>
@@ -310,12 +309,11 @@
 							<parameters/>
 							<Xlint:all/>
 							<!--
-							For some reason annotation processing causes a warning
+							Annotation processing causes a warning
 							"No processor claimed any of these annotations:
 							org.junit.Test,org.junit.AfterClass,org.junit.BeforeClass"
 							while compiling source files to .../pies-base/pies-base-main/target/test-classes
 							So disable it...
-							TODO check if it's still not work (seems like a one more bug in Oracle JDK 8)
 							-->
 							<Xlint:-processing/>
 							<Werror/>

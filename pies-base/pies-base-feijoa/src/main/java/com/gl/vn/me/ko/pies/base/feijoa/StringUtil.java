@@ -1,5 +1,6 @@
 package com.gl.vn.me.ko.pies.base.feijoa;
 
+import com.gl.vn.me.ko.pies.base.constant.Message;
 import java.util.Arrays;
 import javax.annotation.Nullable;
 
@@ -45,5 +46,9 @@ public final class StringUtil {
 			result = String.valueOf(obj);
 		}
 		return result;
+	}
+
+	private StringUtil() {
+		throw new UnsupportedOperationException(Message.INSTANTIATION_NOT_SUPPORTED);
 	}
 }

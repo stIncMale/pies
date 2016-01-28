@@ -1,0 +1,5 @@
+.idea
+target/
+misc/manual\ test/pies-app-echo/
+misc/manual\ test/pies-app-initiator/
+misc/manual\ test/pies-app-proxy/

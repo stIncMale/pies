@@ -82,6 +82,8 @@ public final class TcpSequentialClient<Message, Response>
 	 * A name of the {@link TcpSequentialClient}.
 	 * @param maxWorkerThreads
 	 * Maximum number of {@link Thread}s that process data send and received via the established TCP connections.
+	 * It's RECOMMENDED to specify this value with regard to maximum expected parallel invocations
+	 * of the {@link #send(TcpMessage)} method.
 	 * @param threadFactory
 	 * A {@link ThreadFactory} that will be used to create {@link Thread}s.
 	 * {@link Thread} names MAY not be the same as the {@code threadFactory} generates.

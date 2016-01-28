@@ -2,6 +2,7 @@ package com.gl.vn.me.ko.pies.platform.client.tcp;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import com.gl.vn.me.ko.pies.base.constant.Message;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * Represents response that {@link TcpSequentialClient} returns.
@@ -9,6 +10,7 @@ import com.gl.vn.me.ko.pies.base.constant.Message;
  * @param <Response>
  * A type of response contained by {@link TcpResponse}.
  */
+@ThreadSafe
 public final class TcpResponse<Response> {
 	private final Response response;
 	private final TcpConnection<?, ?> connection;

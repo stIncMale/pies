@@ -103,7 +103,7 @@
 				<artifactId>maven-antrun-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>prepare-harness-artifact</id><!-- TODO split into two here and elsewhere -->
+						<id>prepare-harness-artifact</id>
 						<phase>package</phase>
 						<configuration>
 							<target>

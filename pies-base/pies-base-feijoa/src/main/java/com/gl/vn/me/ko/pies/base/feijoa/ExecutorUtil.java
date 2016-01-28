@@ -43,7 +43,7 @@ public final class ExecutorUtil {
 		checkArgument(quietTime >= 0, ARGUMENT_ILLEGAL, quietTime, "second", "quietTime", "Expected value must be nonnegative");
 		checkArgument(timeout >= 0, ARGUMENT_ILLEGAL, timeout, "third", "timeout", "Expected value must be nonnegative");
 		checkArgument(quietTime <= timeout, ARGUMENT_ILLEGAL, quietTime, "second", "quietTime",
-				"Expected value must not be greater than the third argument");
+				"Expected value must not be greater than the third argument (timeout)");
 		checkNotNull(timeUnit, Message.ARGUMENT_NULL, "fourth", "timeUnit");
 		final List<Runnable> result;
 		boolean interrupted = false;
@@ -91,5 +91,9 @@ public final class ExecutorUtil {
 	public static final ExecutorService unshutdownable(final ExecutorService executorService) {
 		checkNotNull(executorService, Message.ARGUMENT_NULL_SINGLE, "executorService");
 		return new UnshutdownableExecutorService(executorService);
+	}
+
+	private ExecutorUtil() {
+		throw new UnsupportedOperationException(Message.INSTANTIATION_NOT_SUPPORTED);
 	}
 }
