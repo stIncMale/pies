@@ -1,1 +1,0 @@
-com.gl.vn.me.ko.pies.app.initiator.InitiatorApplication
