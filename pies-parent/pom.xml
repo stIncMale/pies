@@ -26,7 +26,7 @@
 		<pies.charset>UTF-8</pies.charset>
 		<project.build.sourceEncoding>${pies.charset}</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>${pies.charset}</project.reporting.outputEncoding>
-		<pies.project.url>https://code.google.com/p/pies/</pies.project.url>
+		<pies.project.url>https://github.com/stIncMale/pies</pies.project.url>
 		<pies.project.license.name>WTFPL</pies.project.license.name>
 		<pies.project.license.url>http://www.wtfpl.net/</pies.project.license.url>
 		<pies.project.inceptionYear>2013</pies.project.inceptionYear>
@@ -380,7 +380,7 @@
 						<encoding>${pies.charset}</encoding>
 						<header>
 							<![CDATA[
-								<a href="https://code.google.com/p/pies/">PIES</a>
+								<a href="${pies.project.url}">PIES</a>
 								<br></br>
 								Java Source Code Documentation
 							]]>
