@@ -20,8 +20,8 @@ import javax.annotation.concurrent.ThreadSafe;
  * Specifies rules that are applied to a package.
  * <p>
  * The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and
- * "OPTIONAL" here and in all packages annotated with this annotations are to be interpreted as described in <a
- * href="http://www.ietf.org/rfc/rfc2119.txt">RFC 2119</a>.
+ * "OPTIONAL" here and in all packages annotated with this annotations are to be interpreted as described in
+ * <a href="http://tools.ietf.org/html/rfc2119">RFC 2119</a>.
  * <p>
  * Default properties of all classes, interfaces, methods and constructors in the package:
  * <ol>
