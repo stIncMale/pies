@@ -2,5 +2,6 @@
 # PIES (Proxy, Initiator and Echo Servers)
 [Documentation](https://sites.google.com/site/projectpies)
 
-[Contacts](https://sites.google.com/site/aboutmale/board)<br>
+[Contacts](https://sites.google.com/site/aboutmale/board)
+
 All content is licensed under [![WTFPL logo](http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl-badge-2.png)](http://www.wtfpl.net/), except where other license is explicitly specified.
