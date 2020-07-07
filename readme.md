@@ -3,7 +3,6 @@
 <p align="right">
 <a href="https://sites.google.com/site/projectpies"><img src="https://img.shields.io/badge/documentation-current-blue.svg" alt="Documentation"></a>
 </p>
-[Documentation](https://sites.google.com/site/projectpies)
 
 ---
 
